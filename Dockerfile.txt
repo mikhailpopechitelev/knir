@@ -1,0 +1,14 @@
+# Используем базовый образ Python 3.9
+FROM python:3.9-slim
+
+# Устанавливаем рабочую директорию
+WORKDIR /app
+
+# Копируем все файлы проекта (кроме игнорируемых) в контейнер
+COPY . .
+
+# Устанавливаем зависимости из requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Команда для запуска test.py (или другой файл)
+CMD ["python", "test.py"]
