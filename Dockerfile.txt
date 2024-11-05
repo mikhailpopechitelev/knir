@@ -1,14 +1,25 @@
-# Используем базовый образ Python 3.9
+# Базовый образ
 FROM python:3.9-slim
 
-# Устанавливаем рабочую директорию
+# Установка зависимостей для скачивания и распаковки
+RUN apt-get update && \
+    apt-get install -y wget unzip && \
+    rm -rf /var/lib/apt/lists/*
+
+# Рабочая директория в контейнере
 WORKDIR /app
 
-# Копируем все файлы проекта (кроме игнорируемых) в контейнер
+# Скачивание архива с Google Диска и распаковка
+ENV FILE_ID=1kvOp-KOck6-44vnTSd8g4pnk8O1DrOk4
+RUN wget --no-check-certificate "https://drive.google.com/uc?export=download&id=${FILE_ID}" -O chest_xray.zip && \
+    unzip chest_xray.zip && \
+    rm chest_xray.zip
+
+# Копирование файлов проекта
 COPY . .
 
-# Устанавливаем зависимости из requirements.txt
+# Установка зависимостей Python
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Команда для запуска test.py (или другой файл)
+# Команда по умолчанию
 CMD ["python", "test.py"]
